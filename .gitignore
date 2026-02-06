@@ -11,3 +11,6 @@
 # notebooks
 **/.ipynb_checkpoints/
 **/anaconda_projects
+
+.DS_Store
+**/.DS_Store
