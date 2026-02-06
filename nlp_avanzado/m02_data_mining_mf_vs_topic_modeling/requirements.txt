@@ -3,3 +3,5 @@ pyldavis
 spacy
 nltk
 openai
+spacy
+es-core-news-sm
