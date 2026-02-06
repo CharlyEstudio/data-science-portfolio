@@ -10,7 +10,8 @@
 
 # notebooks
 **/.ipynb_checkpoints/
-**/anaconda_projects
+**/anaconda_projects/
+**/.virtual_documents/
 
 .DS_Store
 **/.DS_Store
