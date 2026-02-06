@@ -1,0 +1,5 @@
+datasets
+pyldavis
+spacy
+nltk
+openai

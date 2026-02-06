@@ -1,0 +1,13 @@
+# secrets
+.env
+**/.env
+
+# virtual env
+.venv/
+**/.venv/
+.m02_venv/
+**/.m02_venv/
+
+# notebooks
+**/.ipynb_checkpoints/
+**/anaconda_projects
