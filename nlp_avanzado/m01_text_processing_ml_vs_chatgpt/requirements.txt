@@ -1,3 +1,3 @@
 mglearn
 pandas
-sklearn
+scikit-learn
