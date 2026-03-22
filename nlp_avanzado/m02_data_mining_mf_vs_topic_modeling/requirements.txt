@@ -1,0 +1,6 @@
+datasets
+pyldavis
+spacy
+nltk
+openai
+python-dotenv

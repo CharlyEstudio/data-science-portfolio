@@ -1,0 +1,134 @@
+{
+  "users": {
+    "description": "Almacena información de cuentas de clientes, incluyendo detalles de contacto y fecha de registro.",
+    "schema": "id INT PRIMARY KEY, first_name VARCHAR(50), last_name VARCHAR(50), email VARCHAR(100) UNIQUE, phone VARCHAR(20), created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+    "examples": [
+      {
+        "description": "Buscar un usuario por correo electrónico.",
+        "sql": "SELECT * FROM users WHERE email = 'cliente@example.com';"
+      },
+      {
+        "description": "Contar nuevos usuarios en el último mes.",
+        "sql": "SELECT COUNT(*) FROM users WHERE created_at >= CURRENT_DATE - INTERVAL '1 month';"
+      },
+      {
+        "description": "Buscar usuarios sin número de teléfono.",
+        "sql": "SELECT id, first_name, last_name FROM users WHERE phone IS NULL;"
+      }
+    ]
+  },
+  "categories": {
+    "description": "Categorías de productos para organizar el catálogo jerárquicamente.",
+    "schema": "id INT PRIMARY KEY, parent_id INT, name VARCHAR(100), description TEXT",
+    "examples": [
+      {
+        "description": "Obtener todas las categorías principales (sin padre).",
+        "sql": "SELECT name FROM categories WHERE parent_id IS NULL;"
+      },
+      {
+        "description": "Listar todas las subcategorías para el ID de categoría 5.",
+        "sql": "SELECT name, description FROM categories WHERE parent_id = 5;"
+      }
+    ]
+  },
+  "products": {
+    "description": "Detalles sobre artículos a la venta, precios, vinculación de categorías e inventario.",
+    "schema": "id INT PRIMARY KEY, category_id INT, name VARCHAR(255), price DECIMAL(10, 2), stock_quantity INT, sku VARCHAR(50) UNIQUE, is_active BOOLEAN",
+    "examples": [
+      {
+        "description": "Listar productos inactivos o sin stock.",
+        "sql": "SELECT name, sku FROM products WHERE stock_quantity = 0 OR is_active = FALSE;"
+      },
+      {
+        "description": "Encontrar el producto más caro en una categoría.",
+        "sql": "SELECT name, price FROM products WHERE category_id = 3 ORDER BY price DESC LIMIT 1;"
+      },
+      {
+        "description": "Calcular el valor total del inventario para un producto.",
+        "sql": "SELECT name, (price * stock_quantity) AS total_value FROM products WHERE sku = 'PROD-123';"
+      }
+    ]
+  },
+  "orders": {
+    "description": "Datos transaccionales de alto nivel para compras de clientes, estado del pedido y costo total.",
+    "schema": "id INT PRIMARY KEY, user_id INT, order_date TIMESTAMP, status VARCHAR(50), total_amount DECIMAL(10, 2)",
+    "examples": [
+      {
+        "description": "Obtener pedidos pendientes para un usuario específico.",
+        "sql": "SELECT id, order_date, total_amount FROM orders WHERE user_id = 123 AND status = 'pending';"
+      },
+      {
+        "description": "Calcular los ingresos totales de hoy.",
+        "sql": "SELECT SUM(total_amount) AS revenue FROM orders WHERE DATE(order_date) = CURRENT_DATE AND status != 'cancelled';"
+      },
+      {
+        "description": "Contar pedidos cancelados en 2024.",
+        "sql": "SELECT COUNT(*) FROM orders WHERE status = 'cancelled' AND EXTRACT(YEAR FROM order_date) = 2024;"
+      }
+    ]
+  },
+  "order_items": {
+    "description": "Tabla de unión que detalla productos específicos comprados en un pedido, cantidades y precios cerrados.",
+    "schema": "id INT PRIMARY KEY, order_id INT, product_id INT, quantity INT, unit_price DECIMAL(10, 2)",
+    "examples": [
+      {
+        "description": "Ver productos y cantidades para un pedido específico.",
+        "sql": "SELECT product_id, quantity, unit_price FROM order_items WHERE order_id = 456;"
+      },
+      {
+        "description": "Calcular la cantidad total vendida de un producto específico.",
+        "sql": "SELECT SUM(quantity) AS total_sold FROM order_items WHERE product_id = 789;"
+      },
+      {
+        "description": "Identificar qué pedido compró la mayor cantidad de un solo artículo.",
+        "sql": "SELECT order_id, quantity FROM order_items ORDER BY quantity DESC LIMIT 1;"
+      }
+    ]
+  },
+  "reviews": {
+    "description": "Calificaciones de clientes y comentarios escritos para productos específicos.",
+    "schema": "id INT PRIMARY KEY, product_id INT, user_id INT, rating INT, comment TEXT, created_at TIMESTAMP",
+    "examples": [
+      {
+        "description": "Obtener todas las reseñas de 5 estrellas para un producto.",
+        "sql": "SELECT comment, user_id FROM reviews WHERE product_id = 999 AND rating = 5;"
+      },
+      {
+        "description": "Calcular la calificación promedio de un producto.",
+        "sql": "SELECT AVG(rating) AS average_rating FROM reviews WHERE product_id = 111;"
+      },
+      {
+        "description": "Buscar usuarios que dejaron reseñas de 1 estrella el mes pasado.",
+        "sql": "SELECT user_id, comment FROM reviews WHERE rating = 1 AND created_at >= CURRENT_DATE - INTERVAL '1 month';"
+      }
+    ]
+  },
+  "shipping_details": {
+    "description": "Información logística, números de seguimiento y direcciones de entrega vinculadas a un pedido.",
+    "schema": "id INT PRIMARY KEY, order_id INT, address_line1 VARCHAR(255), city VARCHAR(100), state VARCHAR(100), postal_code VARCHAR(20), tracking_number VARCHAR(100), carrier VARCHAR(50)",
+    "examples": [
+      {
+        "description": "Buscar dirección de envío y seguimiento para un pedido.",
+        "sql": "SELECT address_line1, city, tracking_number, carrier FROM shipping_details WHERE order_id = 456;"
+      },
+      {
+        "description": "Contar paquetes enviados a través de FedEx.",
+        "sql": "SELECT COUNT(*) FROM shipping_details WHERE carrier = 'FedEx';"
+      }
+    ]
+  },
+  "promotions": {
+    "description": "Códigos de descuento, porcentajes de oferta y rangos de fechas válidos para promociones de la tienda.",
+    "schema": "id INT PRIMARY KEY, code VARCHAR(50) UNIQUE, discount_percentage DECIMAL(5, 2), start_date DATE, end_date DATE, is_active BOOLEAN",
+    "examples": [
+      {
+        "description": "Verificar si un código de descuento está activo y es válido hoy.",
+        "sql": "SELECT discount_percentage FROM promotions WHERE code = 'VERANO20' AND is_active = TRUE AND CURRENT_DATE BETWEEN start_date AND end_date;"
+      },
+      {
+        "description": "Listar promociones que vencen en los próximos 7 días.",
+        "sql": "SELECT code, end_date FROM promotions WHERE end_date BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL '7 days';"
+      }
+    ]
+  }
+}
