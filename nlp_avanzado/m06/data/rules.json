@@ -1,0 +1,14 @@
+{
+    "flight_risk": {
+        "label": "Flight Risk",
+        "sql_condition": "PerformanceRating = 4 AND MonthlyIncome < 5000 AND TrainingTimesLastYear = 0"
+    },
+    "rising_star": {
+        "label": "Rising Star",
+        "sql_condition": "YearsAtCompany <= 2 AND PerformanceRating = 4 AND Attrition = 'No'"
+    },
+    "stagnant_role": {
+        "label": "Stagnant Role",
+        "sql_condition": "YearsInCurrentRole > 5 AND YearsSinceLastPromotion > 5"
+    }
+}
